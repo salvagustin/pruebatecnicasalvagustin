@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${reader.id != null ? 'Editar Lector' : 'Nuevo Lector'} + ' - Blog Readers'">Blog Readers</title>
+    <link href="/webjars/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="/" th:href="@{/}">
+                <i class="fas fa-blog"></i> Blog Readers
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/" th:href="@{/}">
+                            <i class="fas fa-home"></i> Inicio
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/readers" th:href="@{/readers}">
+                            <i class="fas fa-users"></i> Lectores
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/blogs" th:href="@{/blogs}">
+                            <i class="fas fa-blog"></i> Blogs
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/blogs-readers" th:href="@{/blogs-readers}">
+                            <i class="fas fa-link"></i> Asociaciones
+                        </a>
+                    </li>
+                </ul>
+                
+                <ul class="navbar-nav">
+                    <li class="nav-item dropdown" sec:authorize="isAuthenticated()">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user"></i> <span sec:authentication="name">Usuario</span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/logout" th:href="@{/logout}">
+                                <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                            </a></li>
+                        </ul>
+                    </li>
+                </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="mb-0">
+                            <i class="fas fa-user-plus" th:if="${reader.id == null}"></i>
+                            <i class="fas fa-user-edit" th:if="${reader.id != null}"></i>
+                            <span th:text="${reader.id != null ? 'Editar Lector' : 'Nuevo Lector'}"></span>
+                        </h4>
+                    </div>
+                    
+                    <div class="card-body">
+                        <form th:action="${reader.id != null ? '/readers/update/' + reader.id : '/readers'}" 
+                              th:object="${reader}" method="post">
+                            
+                            <div class="mb-3">
+                                <label for="name" class="form-label">
+                                    <i class="fas fa-user"></i> Nombre *
+                                </label>
+                                <input type="text" 
+                                       class="form-control" 
+                                       th:classappend="${#fields.hasErrors('name')} ? 'is-invalid' : ''"
+                                       id="name" 
+                                       th:field="*{name}" 
+                                       maxlength="8"
+                                       placeholder="Ingrese el nombre del lector (máx. 8 caracteres)"
+                                       required>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">
+                                    Error en el nombre
+                                </div>
+                                <div class="form-text">Máximo 8 caracteres</div>
+                            </div>
+                            
+                            <div class="d-flex gap-2">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save"></i> 
+                                    <span th:text="${reader.id != null ? 'Actualizar' : 'Guardar'}"></span>
+                                </button>
+                                <a href="/readers" th:href="@{/readers}" class="btn btn-secondary">
+                                    <i class="fas fa-times"></i> Cancelar
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/webjars/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Contador de caracteres
+        document.getElementById('name').addEventListener('input', function() {
+            const maxLength = 8;
+            const currentLength = this.value.length;
+            const formText = this.nextElementSibling.nextElementSibling;
+            formText.textContent = `${currentLength}/${maxLength} caracteres`;
+            
+            if (currentLength > maxLength) {
+                formText.style.color = 'red';
+            } else {
+                formText.style.color = '';
+            }
+        });
+    </script>
+</body>
+</html>

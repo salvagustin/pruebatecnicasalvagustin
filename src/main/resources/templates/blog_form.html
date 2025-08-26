@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${blog.id != null ? 'Editar Blog' : 'Nuevo Blog'} + ' - Blog Readers'">Blog Readers</title>
+    <link href="/webjars/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="/" th:href="@{/}">
+                <i class="fas fa-blog"></i> Blog Readers
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/" th:href="@{/}">
+                            <i class="fas fa-home"></i> Inicio
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/readers" th:href="@{/readers}">
+                            <i class="fas fa-users"></i> Lectores
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/blogs" th:href="@{/blogs}">
+                            <i class="fas fa-blog"></i> Blogs
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/blogs-readers" th:href="@{/blogs-readers}">
+                            <i class="fas fa-link"></i> Asociaciones
+                        </a>
+                    </li>
+                </ul>
+                
+                <ul class="navbar-nav">
+                    <li class="nav-item dropdown" sec:authorize="isAuthenticated()">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user"></i> <span sec:authentication="name">Usuario</span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/logout" th:href="@{/logout}">
+                                <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                            </a></li>
+                        </ul>
+                    </li>
+                </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="mb-0">
+                            <i class="fas fa-blog" th:if="${blog.id == null}"></i>
+                            <i class="fas fa-edit" th:if="${blog.id != null}"></i>
+                            <span th:text="${blog.id != null ? 'Editar Blog' : 'Nuevo Blog'}"></span>
+                        </h4>
+                    </div>
+                    
+                    <div class="card-body">
+                        <form th:action="${blog.id != null ? '/blogs/update/' + blog.id : '/blogs'}" 
+                              th:object="${blog}" method="post">
+                            
+                            <div class="mb-3">
+                                <label for="title" class="form-label">
+                                    <i class="fas fa-heading"></i> Título *
+                                </label>
+                                <input type="text" 
+                                       class="form-control" 
+                                       th:classappend="${#fields.hasErrors('title')} ? 'is-invalid' : ''"
+                                       id="title" 
+                                       th:field="*{title}" 
+                                       maxlength="50"
+                                       placeholder="Ingrese el título del blog (máx. 50 caracteres)"
+                                       required>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">
+                                    Error en el título
+                                </div>
+                                <div class="form-text" id="titleCounter">0/50 caracteres</div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="description" class="form-label">
+                                    <i class="fas fa-align-left"></i> Descripción
+                                </label>
+                                <textarea class="form-control" 
+                                          th:classappend="${#fields.hasErrors('description')} ? 'is-invalid' : ''"
+                                          id="description" 
+                                          th:field="*{description}" 
+                                          maxlength="4000"
+                                          rows="5"
+                                          placeholder="Ingrese la descripción del blog (máx. 4000 caracteres)"></textarea>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">
+                                    Error en la descripción
+                                </div>
+                                <div class="form-text" id="descriptionCounter">0/4000 caracteres</div>
+                            </div>
+                            
+                            <div class="d-flex gap-2">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save"></i> 
+                                    <span th:text="${blog.id != null ? 'Actualizar' : 'Guardar'}"></span>
+                                </button>
+                                <a href="/blogs" th:href="@{/blogs}" class="btn btn-secondary">
+                                    <i class="fas fa-times"></i> Cancelar
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/webjars/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Contador de caracteres para título
+        document.getElementById('title').addEventListener('input', function() {
+            const maxLength = 50;
+            const currentLength = this.value.length;
+            const counter = document.getElementById('titleCounter');
+            counter.textContent = `${currentLength}/${maxLength} caracteres`;
+            
+            if (currentLength > maxLength) {
+                counter.style.color = 'red';
+            } else {
+                counter.style.color = '';
+            }
+        });
+        
+        // Contador de caracteres para descripción
+        document.getElementById('description').addEventListener('input', function() {
+            const maxLength = 4000;
+            const currentLength = this.value.length;
+            const counter = document.getElementById('descriptionCounter');
+            counter.textContent = `${currentLength}/${maxLength} caracteres`;
+            
+            if (currentLength > maxLength) {
+                counter.style.color = 'red';
+            } else {
+                counter.style.color = '';
+            }
+        });
+        
+        // Inicializar contadores al cargar la página
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('title').dispatchEvent(new Event('input'));
+            document.getElementById('description').dispatchEvent(new Event('input'));
+        });
+    </script>
+</body>
+</html>

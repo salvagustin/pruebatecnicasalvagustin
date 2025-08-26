@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio - Blog Readers</title>
+    <link href="/webjars/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .hero-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 4rem 0;
+        }
+        .feature-card {
+            transition: transform 0.3s;
+            border: none;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+        .icon-large {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="/" th:href="@{/}">
+                <i class="fas fa-blog"></i> Blog Readers
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/" th:href="@{/}">
+                            <i class="fas fa-home"></i> Inicio
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/readers" th:href="@{/readers}">
+                            <i class="fas fa-users"></i> Lectores
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/blogs" th:href="@{/blogs}">
+                            <i class="fas fa-blog"></i> Blogs
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/blogs-readers" th:href="@{/blogs-readers}">
+                            <i class="fas fa-link"></i> Asociaciones
+                        </a>
+                    </li>
+                </ul>
+                
+                <ul class="navbar-nav">
+                    <li class="nav-item dropdown" sec:authorize="isAuthenticated()">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user"></i> <span sec:authentication="name">Usuario</span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/logout" th:href="@{/logout}">
+                                <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                            </a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section text-center">
+        <div class="container">
+            <h1 class="display-4 mb-4">Sistema de Gestión de Lectores de Blogs</h1>
+            <p class="lead mb-4">Administra lectores, blogs y sus asociaciones de manera eficiente</p>
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <p class="mb-4">Bienvenido al sistema integral para gestionar la relación entre lectores y blogs. 
+                    Registra lectores, crea blogs y establece conexiones entre ellos.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="py-5">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card feature-card h-100 text-center">
+                        <div class="card-body p-4">
+                            <i class="fas fa-users text-primary icon-large"></i>
+                            <h5 class="card-title">Gestión de Lectores</h5>
+                            <p class="card-text">Administra la información de los lectores con validaciones automáticas y controles de integridad.</p>
+                            <a href="/readers" th:href="@{/readers}" class="btn btn-primary">
+                                <i class="fas fa-arrow-right"></i> Gestionar Lectores
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="card feature-card h-100 text-center">
+                        <div class="card-body p-4">
+                            <i class="fas fa-blog text-success icon-large"></i>
+                            <h5 class="card-title">Gestión de Blogs</h5>
+                            <p class="card-text">Crea y administra blogs con títulos y descripciones detalladas para una mejor organización.</p>
+                            <a href="/blogs" th:href="@{/blogs}" class="btn btn-success">
+                                <i class="fas fa-arrow-right"></i> Gestionar Blogs
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="card feature-card h-100 text-center">
+                        <div class="card-body p-4">
+                            <i class="fas fa-link text-warning icon-large"></i>
+                            <h5 class="card-title">Asociaciones</h5>
+                            <p class="card-text">Establece y administra las relaciones entre lectores y blogs mediante listas de valores.</p>
+                            <a href="/blogs-readers" th:href="@{/blogs-readers}" class="btn btn-warning">
+                                <i class="fas fa-arrow-right"></i> Ver Asociaciones
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    
+
+   
+
+    <script src="/webjars/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
